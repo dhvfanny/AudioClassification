@@ -11,8 +11,8 @@ The required dependencies are:
 - librosa = 0.4
 - scikit-learn >= 0.15
 
-Couple of pointers:
-- Data (audio files) are not pushed
+## Couple of pointers:
+- Data (audio files) are not pushed.
 
 ## TO DO
 - Hyperparameter Optimization
