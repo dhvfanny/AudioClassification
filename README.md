@@ -11,7 +11,7 @@ The required dependencies are:
 - librosa = 0.4
 - scikit-learn >= 0.15
 
-## Couple of pointers:
+## Couple of pointers
 - Data (audio files) are not pushed. Contact me if you need them. If you want to train with your own data, create a directory *data* under home having two subdirectories under it, i.e. *breathing* and *non_breathing*. Put your audio files or directories containing the audio files under the corresponding class. 
 
 ## To Do

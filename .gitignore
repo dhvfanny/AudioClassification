@@ -48,3 +48,4 @@ Temporary Items
 # Ignore the following file types or files
 todo.txt
 *.wav
+*.pyc
