@@ -10,31 +10,18 @@ Train a classifier for breath detection
 from __future__ import absolute_import
 from __future__ import print_function
 from librosa.util import FeatureExtractor
+from get_file_locs import get_file_locs
 import librosa
-import glob
-from set_wd import set_wd
 import os
 from sklearn.pipeline import Pipeline
 import numpy as np
 from sklearn.svm import SVC
 from sklearn.cross_validation import train_test_split
 
-def get_file_locs(directory, extension):
-    # Returns a list of file names of a given extension under a directory
-    # E.g. get_file_locs(images, "png")
-    
-    files = []
-    for root, dirnames, filenames in os.walk(directory):
-        files.extend(glob.glob(root + "/*." + extension))
-
-    return files
-
 if __name__ == '__main__':
     
-    project_dir = "Universite\\Research\\BreathDetection"
-    set_wd(project_dir)
-    
     # Load breathing samples
+    os.chdir("..")
     breath_files = get_file_locs(os.getcwd() + '\\data\\breathing', 'wav')
     b = np.array([])
     b_dur = 0
@@ -53,10 +40,10 @@ if __name__ == '__main__':
     nonbreath_files = get_file_locs(os.getcwd() + '\\data\\non_breathing', 'wav') 
     nb = np.array([])
     nb_dur = 0
-    for j in range(len(breath_files)):
+    for j in range(len(nonbreath_files)):
         print('\nReading file (non-breathing) number', str(j + 1))
         nonbreath_file = nonbreath_files[j]
-        temp_nb, temp_sr_nb = librosa.load(nonbreath_file)
+        temp_nb, temp_sr_nb = librosa.load(nonbreath_file, duration = 8) # too much nonbreath
         temp_dur = temp_nb.shape[0] / float(temp_sr_nb)
         nb_dur = nb_dur + temp_dur
         print('\tFile (non-breathing) sampling rate :', str(temp_sr_nb))
@@ -64,12 +51,14 @@ if __name__ == '__main__':
         nb = np.append(nb, temp_nb)  
     print('\n\tTotal duration (non-breathing) :', "{0:.2f}".format(nb_dur), 'seconds')   
     
+    
+    
     # Build a feature extraction pipeline
     # First stage is a mel-frequency spectrogram
     MelSpec = FeatureExtractor(librosa.feature.melspectrogram, 
                                             n_fft=1024,
                                             hop_length = 512,
-                                            n_mels=20,
+                                            n_mels=20
                                             # fmax=librosa.midi_to_hz(116), 
                                             # fmin=librosa.midi_to_hz(24)
                                             )
