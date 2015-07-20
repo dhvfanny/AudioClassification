@@ -45,6 +45,6 @@ Temporary Items
 # Ignore the following directories
 /papers
 
-# Ignore the following tile types
-*.txt
+# Ignore the following file types or files
+todo.txt
 *.wav
