@@ -16,6 +16,7 @@ The required dependencies are:
 
 ## To Do
 - Hyperparameter Optimization
+- Upsample/downsample each input according to fixed sampling rate
 - (Optional) Implement scikit-learn-independent testing
 
 ## Contact
