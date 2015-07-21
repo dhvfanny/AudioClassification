@@ -44,6 +44,7 @@ Temporary Items
 
 # Ignore the following directories
 /papers
+/our_paper
 
 # Ignore the following file types or files
 todo.txt
