@@ -2,7 +2,7 @@
 Author         : Oguzhan Gencoglu
 Contact        : oguzhan.gencoglu@tut.fi
 Created        : 11.07.2015
-Latest Version : 20.07.2015
+Latest Version : 21.07.2015
 
 Train a classifier for breath detection
 '''
@@ -21,10 +21,11 @@ from sklearn.cross_validation import train_test_split
 if __name__ == '__main__':
     
     # Load breathing samples
-    os.chdir("..")
+    # os.chdir("..")
     breath_files = get_file_locs(os.getcwd() + '\\data\\breathing', 'wav')
     b = np.array([])
     b_dur = 0
+    sr_b = 22050
     for i in range(len(breath_files)):
         print('\nReading file (breathing) number', str(i + 1))
         breath_file = breath_files[i]
@@ -54,11 +55,15 @@ if __name__ == '__main__':
     
     
     # Build a feature extraction pipeline
+    fs = sr_b          # sampling rate for the whole pipeline
+    window_length = 20 # in miliseconds
+    n_mels = 20         # number of mel bands
+    overlap = 0.5      # window overlap ratio
     # First stage is a mel-frequency spectrogram
     MelSpec = FeatureExtractor(librosa.feature.melspectrogram, 
-                                            n_fft=1024,
-                                            hop_length = 512,
-                                            n_mels=20
+                                            n_fft = np.round(window_length * fs * 1e-3),
+                                            hop_length = np.round(overlap * window_length * fs * 1e-3),
+                                            n_mels = n_mels
                                             # fmax=librosa.midi_to_hz(116), 
                                             # fmin=librosa.midi_to_hz(24)
                                             )
