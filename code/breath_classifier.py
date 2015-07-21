@@ -90,7 +90,7 @@ if __name__ == '__main__':
     X_train, X_test, y_train, y_test = train_test_split(all_feats, all_targets, test_size=0.1)
     
     # Train SVM classifier
-    classifier = SVC(gamma=0.001)                                    
+    classifier = SVC(kernel = 'linear', gamma=0.001)                                    
     classifier.fit(X_train, y_train) 
     pred = classifier.predict(X_test)
     print("Accuracy:", 100 * np.sum(pred == y_test)/float(pred.shape[0]))
