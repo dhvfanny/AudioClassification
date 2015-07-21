@@ -21,7 +21,6 @@ from sklearn.cross_validation import train_test_split
 if __name__ == '__main__':
     
     # Load breathing samples
-    # os.chdir("..")
     breath_files = get_file_locs(os.getcwd() + '\\data\\breathing', 'wav')
     b = np.array([])
     b_dur = 0
