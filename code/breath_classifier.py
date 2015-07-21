@@ -54,14 +54,14 @@ if __name__ == '__main__':
     
     
     # Build a feature extraction pipeline
-    fs = sr_b          # sampling rate for the whole pipeline
-    window_length = 20 # in miliseconds
+    fs = sr_b           # sampling rate for the whole pipeline
+    window_length = 40  # in miliseconds
     n_mels = 20         # number of mel bands
-    overlap = 0.5      # window overlap ratio
+    n_fft = 1024        # fft length
     # First stage is a mel-frequency spectrogram
     MelSpec = FeatureExtractor(librosa.feature.melspectrogram, 
-                                            n_fft = np.round(window_length * fs * 1e-3),
-                                            hop_length = np.round(overlap * window_length * fs * 1e-3),
+                                            n_fft = n_fft,
+                                            hop_length = np.round(window_length * fs * 1e-3),
                                             n_mels = n_mels
                                             )
     # Second stage is log-amplitude; power is relative to peak in the signal
