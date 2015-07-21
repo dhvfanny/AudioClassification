@@ -63,8 +63,6 @@ if __name__ == '__main__':
                                             n_fft = np.round(window_length * fs * 1e-3),
                                             hop_length = np.round(overlap * window_length * fs * 1e-3),
                                             n_mels = n_mels
-                                            # fmax=librosa.midi_to_hz(116), 
-                                            # fmin=librosa.midi_to_hz(24)
                                             )
     # Second stage is log-amplitude; power is relative to peak in the signal
     LogAmp = FeatureExtractor(librosa.logamplitude, 
@@ -90,7 +88,7 @@ if __name__ == '__main__':
     X_train, X_test, y_train, y_test = train_test_split(all_feats, all_targets, test_size=0.1)
     
     # Train SVM classifier
-    classifier = SVC(kernel = 'linear', gamma=0.001)                                    
+    classifier = SVC(kernel = 'rbf', gamma = 0.01)                                    
     classifier.fit(X_train, y_train) 
     pred = classifier.predict(X_test)
     print("Accuracy:", 100 * np.sum(pred == y_test)/float(pred.shape[0]))
