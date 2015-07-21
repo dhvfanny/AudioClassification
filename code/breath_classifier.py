@@ -79,6 +79,7 @@ if __name__ == '__main__':
                                          ('Transpose', Transpose),
                                          ('Stack', Stack)])
     
+    # Apply feature extraction pipeline
     breath_feats = breath_pipe.fit_transform([b])
     nonbreath_feats = breath_pipe.fit_transform([nb])
     breath_targets = np.ones(breath_feats.shape[0])
@@ -86,10 +87,11 @@ if __name__ == '__main__':
     all_feats = np.vstack((breath_feats, nonbreath_feats))
     all_targets = np.hstack((breath_targets, nonbreath_targets))
     
-    classifier = SVC(gamma=0.001)                                    
+    # Split data into training and test
     X_train, X_test, y_train, y_test = train_test_split(all_feats, all_targets, test_size=0.1)
     
-    # Train a classifier
+    # Train SVM classifier
+    classifier = SVC(gamma=0.001)                                    
     classifier.fit(X_train, y_train) 
     pred = classifier.predict(X_test)
     print("Accuracy:", 100 * np.sum(pred == y_test)/float(pred.shape[0]))
