@@ -57,10 +57,9 @@ if __name__ == '__main__':
     fs = sr_b           # sampling rate for the whole pipeline
     window_length = 40  # in miliseconds
     n_mels = 20         # number of mel bands
-    n_fft = 1024        # fft length
     # First stage is a mel-frequency spectrogram
     MelSpec = FeatureExtractor(librosa.feature.melspectrogram, 
-                                            n_fft = n_fft,
+                                            n_fft = np.round(window_length * fs * 1e-3),
                                             hop_length = np.round(window_length * fs * 1e-3),
                                             n_mels = n_mels
                                             )
@@ -88,7 +87,7 @@ if __name__ == '__main__':
     X_train, X_test, y_train, y_test = train_test_split(all_feats, all_targets, test_size=0.1)
     
     # Train SVM classifier
-    classifier = SVC(kernel = 'rbf', gamma = 0.01)                                    
+    classifier = SVC(kernel = 'rbf', gamma = 0.005)                                    
     classifier.fit(X_train, y_train) 
     pred = classifier.predict(X_test)
     print("Accuracy:", 100 * np.sum(pred == y_test)/float(pred.shape[0]))
