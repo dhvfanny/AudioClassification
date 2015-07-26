@@ -51,10 +51,7 @@ void fft(CArray &x)
 			x[b] = t;
 		}
 	}
-	// Normalize
-	//Complex f = 1.0 / sqrt(N);
-	//for (unsigned int i = 0; i < N; i++)
-		//x[i] *= f;
+
 }
 
 
