@@ -1,5 +1,5 @@
-# BreathDetection
-Breath Detection in Python
+# AudioClassification
+Audio Classification in Python
 
 ## Dependencies
 The code is tested to work under Python 2.7. It will probably work under Python 3+ too. 
