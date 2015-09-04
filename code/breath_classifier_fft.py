@@ -17,6 +17,12 @@ from sklearn.pipeline import Pipeline
 import numpy as np
 from sklearn.svm import SVC
 from sklearn.cross_validation import train_test_split
+from sliding_window import sliding_window
+
+def rolling_window(a, window):
+    shape = a.shape[:-1] + (a.shape[-1] - window + 1, window)
+    strides = a.strides + (a.strides[-1],)
+    return np.lib.stride_tricks.as_strided(a, shape=shape, strides=strides)
 
 if __name__ == '__main__':
     
@@ -49,38 +55,25 @@ if __name__ == '__main__':
         print('\tFile (non-breathing) sampling rate :', str(temp_sr_nb))
         print('\tFile (non-breathing) duration :', "{0:.2f}".format(temp_dur), 'seconds')
         nb = np.append(nb, temp_nb)  
-    print('\n\tTotal duration (non-breathing) :', "{0:.2f}".format(nb_dur), 'seconds')   
+    print('\n\tTotal duration (non-breathing) :', "{0:.2f}".format(nb_dur), 'seconds') 
     
+    # windowing
+    window_len = 1024
+    b_feat = sliding_window(b, window_len)
+    nb_feat = sliding_window(nb, window_len)
     
+    # zero mean scaling within each window
+    b_feat = b_feat - np.transpose(np.tile(np.mean(b_feat, axis = 1), (b_feat.shape[1], 1)))
+    nb_feat = nb_feat - np.transpose(np.tile(np.mean(nb_feat, axis = 1), (nb_feat.shape[1], 1)))
     
-    # Build a feature extraction pipeline
-    fs = sr_b           # sampling rate for the whole pipeline
-    window_length = 40  # in miliseconds
-    n_mels = 20         # number of mel bands
-    # First stage is a mel-frequency spectrogram
-    MelSpec = FeatureExtractor(librosa.feature.melspectrogram, 
-                                            n_fft = np.round(window_length * fs * 1e-3),
-                                            hop_length = np.round(window_length * fs * 1e-3),
-                                            n_mels = n_mels
-                                            )
-    # Second stage is log-amplitude; power is relative to peak in the signal
-    LogAmp = FeatureExtractor(librosa.logamplitude, 
-                                        ref_power=np.max)
-    # Third stage transposes the data so that frames become samples
-    Transpose = FeatureExtractor(np.transpose)
-    # Last stage stacks all samples together into one matrix for training
-    Stack = FeatureExtractor(np.vstack, iterate=False)
-    breath_pipe = Pipeline([('Mel spectrogram', MelSpec), 
-                                         ('Log amplitude', LogAmp),
-                                         ('Transpose', Transpose),
-                                         ('Stack', Stack)])
+    # fft features
+    b_feat = np.abs(np.fft.fft(sliding_window(b, window_len), axis = 1))
+    nb_feat = np.abs(np.fft.fft(sliding_window(nb, window_len), axis = 1))
+    all_feats = np.vstack((b_feat, nb_feat))
     
-    # Apply feature extraction pipeline
-    breath_feats = breath_pipe.fit_transform([b])
-    nonbreath_feats = breath_pipe.fit_transform([nb])
-    breath_targets = np.ones(breath_feats.shape[0])
-    nonbreath_targets = np.zeros(nonbreath_feats.shape[0])
-    all_feats = np.vstack((breath_feats, nonbreath_feats))
+    # create targets
+    breath_targets = np.ones(b_feat.shape[0])
+    nonbreath_targets = np.zeros(nb_feat.shape[0])
     all_targets = np.hstack((breath_targets, nonbreath_targets))
     
     # Split data into training and test
@@ -90,7 +83,5 @@ if __name__ == '__main__':
     classifier = SVC(kernel = 'rbf', gamma = 0.005)                                    
     classifier.fit(X_train, y_train) 
     pred = classifier.predict(X_test)
-    print("Accuracy:", 100 * np.sum(pred == y_test)/float(pred.shape[0]))
-
-    
+    print("Accuracy:", 100 * np.sum(pred == y_test)/float(pred.shape[0]))    
     
