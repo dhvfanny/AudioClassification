@@ -19,15 +19,19 @@ from sklearn.svm import SVC
 from sklearn.cross_validation import train_test_split
 from sliding_window import sliding_window
 
+
 def rolling_window(a, window):
+    
     shape = a.shape[:-1] + (a.shape[-1] - window + 1, window)
     strides = a.strides + (a.strides[-1],)
+    
     return np.lib.stride_tricks.as_strided(a, shape=shape, strides=strides)
+
 
 if __name__ == '__main__':
     
     # Load breathing samples
-    breath_files = get_file_locs('..\\data\\breathing', 'wav')
+    breath_files = get_file_locs('data\\breathing', 'wav')
     b = np.array([])
     b_dur = 0
     sr_b = 22050
@@ -43,7 +47,7 @@ if __name__ == '__main__':
     print('\n\tTotal duration (breathing) :', "{0:.2f}".format(b_dur), 'seconds')
     
     # Load non-breathing samples 
-    nonbreath_files = get_file_locs('..\\data\\non_breathing', 'wav') 
+    nonbreath_files = get_file_locs('data\\non_breathing', 'wav') 
     nb = np.array([])
     nb_dur = 0
     for j in range(len(nonbreath_files)):
@@ -80,7 +84,7 @@ if __name__ == '__main__':
     X_train, X_test, y_train, y_test = train_test_split(all_feats, all_targets, test_size=0.1)
     
     # Train SVM classifier
-    classifier = SVC(kernel = 'rbf', gamma = 0.005)                                    
+    classifier = SVC(kernel = 'linear', gamma = 0.005)                                    
     classifier.fit(X_train, y_train) 
     pred = classifier.predict(X_test)
     print("Accuracy:", 100 * np.sum(pred == y_test)/float(pred.shape[0]))    
