@@ -84,8 +84,17 @@ if __name__ == '__main__':
     X_train, X_test, y_train, y_test = train_test_split(all_feats, all_targets, test_size=0.1)
     
     # Train SVM classifier
-    classifier = SVC(kernel = 'linear', gamma = 0.005)                                    
+    classifier = SVC(kernel = 'linear')                                    
     classifier.fit(X_train, y_train) 
     pred = classifier.predict(X_test)
     print("Accuracy:", 100 * np.sum(pred == y_test)/float(pred.shape[0]))    
     
+    # print the details of the trained SVM
+    coefs = classifier.coef_
+    print("Weigths of features (for linear case):", coefs)
+    intercept = classifier.intercept_[0]
+    print("Intercept term:", intercept)
+    
+    # Save the trained weights
+    np.savetxt('weights.txt', coefs)
+    np.savetxt('intercept.txt', np.array([intercept]))
