@@ -95,6 +95,6 @@ if __name__ == '__main__':
     intercept = classifier.intercept_[0]
     print("Intercept term:", intercept)
     
-    # Save the trained weights
+    '''# Save the trained weights
     np.savetxt('weights.txt', coefs)
-    np.savetxt('intercept.txt', np.array([intercept]))
+    np.savetxt('intercept.txt', np.array([intercept]))'''
