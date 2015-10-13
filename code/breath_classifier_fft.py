@@ -95,6 +95,6 @@ if __name__ == '__main__':
     
     '''
     # Save the trained weights
-    np.savetxt('weights3.txt', coefs, delimiter='\n')
-    np.savetxt('intercept3.txt', np.array([intercept]))
+    np.savetxt('weights5.txt', coefs, delimiter='\n')
+    np.savetxt('intercept5.txt', np.array([intercept]))
     '''
