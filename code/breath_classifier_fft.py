@@ -2,18 +2,15 @@
 Author         : Oguzhan Gencoglu
 Contact        : oguzhan.gencoglu@tut.fi
 Created        : 11.07.2015
-Latest Version : 21.07.2015
+Latest Version : 13.10.2015
 
 Train a classifier for breath detection
 '''
 
 from __future__ import absolute_import
 from __future__ import print_function
-from librosa.util import FeatureExtractor
 from get_file_locs import get_file_locs
 import librosa
-import os
-from sklearn.pipeline import Pipeline
 import numpy as np
 from sklearn.svm import SVC
 from sklearn.cross_validation import train_test_split
@@ -44,7 +41,6 @@ if __name__ == '__main__':
         print('\tFile (breathing) sampling rate :', str(temp_sr_b))
         print('\tFile (breathing) duration :', "{0:.2f}".format(temp_dur), 'seconds')
         b = np.append(b, temp_b)
-    print('\n\tTotal duration (breathing) :', "{0:.2f}".format(b_dur), 'seconds')
     
     # Load non-breathing samples 
     nonbreath_files = get_file_locs('data\\non_breathing', 'wav') 
@@ -59,6 +55,8 @@ if __name__ == '__main__':
         print('\tFile (non-breathing) sampling rate :', str(temp_sr_nb))
         print('\tFile (non-breathing) duration :', "{0:.2f}".format(temp_dur), 'seconds')
         nb = np.append(nb, temp_nb)  
+        
+    print('\n\tTotal duration (breathing) :', "{0:.2f}".format(b_dur), 'seconds')
     print('\n\tTotal duration (non-breathing) :', "{0:.2f}".format(nb_dur), 'seconds') 
     
     # windowing
@@ -95,6 +93,8 @@ if __name__ == '__main__':
     intercept = classifier.intercept_[0]
     print("Intercept term:", intercept)
     
-    '''# Save the trained weights
-    np.savetxt('weights.txt', coefs)
-    np.savetxt('intercept.txt', np.array([intercept]))'''
+    '''
+    # Save the trained weights
+    np.savetxt('weights3.txt', coefs, delimiter='\n')
+    np.savetxt('intercept3.txt', np.array([intercept]))
+    '''
